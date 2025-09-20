@@ -9,14 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Crear las capas de la torta
+    // Create cake layers
     for (let i = 0; i < 3; i++) {
         const layer = document.createElement('div');
         layer.classList.add('layer');
         cake.appendChild(layer);
     }
 
-    // Crear la vela
+    // Create candle
     const candle = document.createElement('div');
     candle.classList.add('candle');
     const flame = document.createElement('div');
@@ -24,8 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     candle.appendChild(flame);
     cake.appendChild(candle);
 
-    // Crear puntos decorativos
-    for (let i = 0; i < 30; i++) {
+    // Create dots (reduced number for mobile performance)
+    const dotCount = window.innerWidth <= 600 ? 15 : 25; // Fewer dots on mobile
+    for (let i = 0; i < dotCount; i++) {
         const dot = document.createElement('div');
         dot.classList.add('dot');
         dot.style.left = `${Math.random() * 100}%`;
@@ -34,25 +35,26 @@ document.addEventListener('DOMContentLoaded', () => {
         dots.appendChild(dot);
     }
 
-    // Evento para el botón de reproducir
+    // Audio play button event
     playButton.addEventListener('click', () => {
-        // Verifica si el audio está en pausa o ha terminado
         if (audio.paused || audio.ended) {
             audio.play()
-                 .then(() => {
-                     // La reproducción se inició correctamente
-                     playButton.textContent = 'Reproduciendo...';
-                     playButton.disabled = true; // Deshabilita el botón para evitar clics múltiples
-                     playButton.style.cursor = 'not-allowed';
-                 })
-                 .catch(error => {
-                     // El usuario no interactuó o hubo otro error
-                     console.error("Error al intentar reproducir el audio:", error);
-                 });
+                .then(() => {
+                    playButton.textContent = 'Reproduciendo...';
+                    playButton.disabled = true;
+                    playButton.style.cursor = 'not-allowed';
+                })
+                .catch(error => {
+                    console.error('Error al intentar reproducir el audio:', error);
+                    playButton.textContent = 'Error al Reproducir';
+                    setTimeout(() => {
+                        playButton.textContent = 'Reproducir Música';
+                    }, 2000);
+                });
         }
     });
 
-    // Opcional: Volver a habilitar el botón si el audio termina
+    // Re-enable button when audio ends
     audio.addEventListener('ended', () => {
         playButton.textContent = 'Reproducir Música';
         playButton.disabled = false;
